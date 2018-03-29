@@ -1,0 +1,26 @@
+{
+    "name": "zabachok/yii2-data-provider",
+    "description": "Data provider for yii2",
+    "type": "yii2-extension",
+    "keywords": [
+        "data",
+        "provider",
+        "database",
+        "filter"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Daniil Romanov",
+            "email": "zabachok@zabachok.net"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "zabachok\\burivuh\\": ""
+        }
+    }
+}

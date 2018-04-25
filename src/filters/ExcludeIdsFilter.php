@@ -2,7 +2,7 @@
 
 namespace zabachok\dataProvider\filters;
 
-use zabachok\dataProvider\filters\DataFilter;
+use zabachok\dataProvider\DataFilter;
 use yii\db\Query;
 
 class ExcludeIdsFilter extends DataFilter

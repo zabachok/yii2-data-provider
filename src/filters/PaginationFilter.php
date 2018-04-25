@@ -1,9 +1,9 @@
 <?php
 
-namespace zabachok\dataProvider;
+namespace zabachok\dataProvider\filters;
 
-use yii\db\Query;
 use zabachok\dataProvider\Filter;
+use yii\db\Query;
 
 class PaginationFilter extends Filter
 {

@@ -26,40 +26,47 @@ to the require section of your `composer.json` file.
 
 ```php
 
-class ProductRepository implements IProductRepository, IFilterRepository
+namespace app\repositories\statistic;
+
+use app\models\statistic\StatisticExportRequest;
+use app\repositories\statistic\dto\RequestDto;
+use zabachok\dataProvider\IFilterRepository;
+
+class StatisticRepository implements IStatisticRepository, IFilterRepository
 {
     /**
-    * @inheritdoc
-    */
+     * @inheritdoc
+     * @return RequestDto[]
+     */
     public function getRecordsByFilters(array $filters, int $pageSize): array
     {
-        $query = Product::find()
+        $query = StatisticExportRequest::find()
             ->limit($pageSize);
-            
-        foreach($filters as $filter)
-        {
+
+        foreach ($filters as $filter) {
             $filter->setFilter($query);
         }
-        
-        return $query->all();
+
+        $models = $query->all();
+
+        return $this->getRequestDtos($models);
     }
-    
-    
+
     /**
-    * @inheritdoc
-    */
-    public function getTotalByFilters(array $filters): array
+     * @inheritdoc
+     */
+    public function getTotalByFilters(array $filters): int
     {
-        $query = Product::find();
-            
-        foreach($filters as $filter)
-        {
+        $query = StatisticExportRequest::find();
+
+        foreach ($filters as $filter) {
             $filter->setFilter($query);
         }
-        
+
         return $query->count();
     }
-}
+    
+    ...
 
 ```
 
@@ -67,33 +74,36 @@ class ProductRepository implements IProductRepository, IFilterRepository
 
 ```php
 
-class ProductFilterEnum extends BaseEnum implements IFilterEnum
+namespace app\enums\statistic;
+
+use app\filters\statistic\CreatedAtOrderFilter;
+use zabachok\dataProvider\filters\PaginationFilter;
+use zabachok\dataProvider\IFilterEnum;
+
+class FiltersEnum implements IFilterEnum
 {
-    public const 
-        PAGINATION_FILTER = 'app\filters\PaginationFilter',
-        SIZE_FILTER = 'app\filters\product\SizeFilter',
-        COST_FILTER = 'app\filters\product\CostFilter';
+    public const
+        PAGINATION_FILTER = PaginationFilter::class,
+        CREATED_AT_ORDER_FILTER = CreatedAtOrderFilter::class;
         
     /**
-    * @inheritdoc
-    */
+     * @inheritdoc
+     */
     public function getFiltersForRecords(): array
     {
         return [
             self::PAGINATION_FILTER,
-            self::SIZE_FILTER,
-            self::COST_FILTER,
+            self::CREATED_AT_ORDER_FILTER,
         ];
     }
-    
+
     /**
-    * @inheritdoc
-    */
+     * @inheritdoc
+     */
     public function getFiltersForTotal(): array
     {
         return [
-            self::SIZE_FILTER,
-            self::COST_FILTER,
+            self::CREATED_AT_ORDER_FILTER,
         ];
     }
 }
@@ -104,11 +114,63 @@ class ProductFilterEnum extends BaseEnum implements IFilterEnum
 
 ```php
 
+namespace app\services\statistic;
+
+use app\builders\IBuilder;
+use app\builders\statistic\IndexBuilder;
+use app\components\enums\statistic\FiltersEnum;
+use app\forms\statistic\IndexForm;
+use app\repositories\statistic\IStatisticRepository;
+use app\repositories\statistic\StatisticRepository;
+use app\services\IService;
+use Yii;
+use yii\base\Model;
+use zabachok\dataProvider\DataProvider;
+
 class IndexService implements IService
 {
-    public function __construct()
+    /**
+     * @var DataProvider
+     */
+    private $dataProvider;
+
+    /**
+     * @var IndexBuilder
+     */
+    private $builder;
+
+    /**
+     * IndexService constructor.
+     * @param StatisticRepository $repository
+     * @param FiltersEnum $filtersEnum
+     * @param IndexBuilder $builder
+     */
+    public function __construct(
+        StatisticRepository $repository,
+        FiltersEnum $filtersEnum,
+        IndexBuilder $builder
+    ) {
+        $this->dataProvider = Yii::$container->get(DataProvider::class, [$filtersEnum, $repository]);
+        $this->builder = $builder;
+    }
+
+    /**
+     * @param Model|IndexForm $form
+     * @return IBuilder
+     */
+    public function behave(Model $form): IBuilder
     {
-    
+        $this->dataProvider->setForm($form->toArray());
+
+        $this->builder
+            ->addItems(
+                $this->dataProvider->getRecords()
+            )
+            ->setTotal(
+                $this->dataProvider->getTotal()
+            );
+
+        return $this->builder;
     }
 }
 

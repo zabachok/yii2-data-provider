@@ -54,6 +54,8 @@ class DataProvider implements IDataProvider
         }
 
         $this->setDataToFilters($records);
+
+        return $records;
     }
 
     /**

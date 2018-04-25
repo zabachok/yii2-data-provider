@@ -56,6 +56,21 @@ class FilterFactory implements IFilterFactory
     }
 
     /**
+     * @return IDataFilter[]
+     */
+    public function getDataFilters(): array
+    {
+        $result = [];
+        foreach ($this->filters as $filter) {
+            if($filter instanceof IDataFilter){
+                $result[] = $filter;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
      * @param IFilterEnum $filterEnum
      * @return IFilterFactory
      */

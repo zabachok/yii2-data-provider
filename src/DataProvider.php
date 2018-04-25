@@ -20,6 +20,16 @@ class DataProvider implements IDataProvider
     private $repository;
 
     /**
+     * @var array
+     */
+    private $form = [];
+
+    /**
+     * @var array
+     */
+    private $records;
+
+    /**
      * DataProvider constructor.
      * @param IFilterEnum $enum
      * @param IFilterRepository $repository
@@ -38,7 +48,12 @@ class DataProvider implements IDataProvider
      */
     public function getRecords(): array
     {
-        // TODO: Implement getRecords() method.
+        $records = $this->getRecordsInternal();
+        if($this->getHasNext()){
+            array_pop($records);
+        }
+
+        $this->setDataToFilters($records);
     }
 
     /**
@@ -56,7 +71,7 @@ class DataProvider implements IDataProvider
      */
     public function getHasNext(): bool
     {
-        // TODO: Implement getHasNext() method.
+        return count($this->getRecordsInternal()) > $this->form['pageSize'];
     }
 
     /**
@@ -64,6 +79,28 @@ class DataProvider implements IDataProvider
      */
     public function setForm(array $form): void
     {
+        $this->form = $form;
+
         $this->factory->setForm($form);
+    }
+
+    private function getRecordsInternal()
+    {
+        if(empty($this->records)){
+            $this->records = $this->repository->getRecordsByFilters(
+                $this->factory->getFilters(), $this->form['pageSize'] + 1
+            );
+        }
+
+        return $this->records;
+    }
+
+    protected function setDataToFilters(array $records)
+    {
+        $dataFilters = $this->factory->getDataFilters();
+
+        foreach ($dataFilters as $dataFilter) {
+            $dataFilter->saveData($records);
+        }
     }
 }

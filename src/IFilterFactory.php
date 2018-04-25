@@ -16,6 +16,11 @@ interface IFilterFactory
     public function getFilters(): array;
 
     /**
+     * @return IDataFilter[]
+     */
+    public function getDataFilters(): array;
+
+    /**
      * @return IFilter[]
      */
     public function getTotalFilters(): array;

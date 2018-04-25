@@ -5,18 +5,9 @@ namespace zabachok\dataProvider;
 class DataProvider implements IDataProvider
 {
     /**
-     * @var IFilterFactory
+     * @var FilterFactory
      */
     private $factory;
-
-    /**
-     * DataProvider constructor.
-     * @param IFilterFactory $factory
-     */
-    public function __construct(IFilterFactory $factory)
-    {
-        $this->factory = $factory;
-    }
 
     /**
      * @var IFilterEnum
@@ -29,26 +20,17 @@ class DataProvider implements IDataProvider
     private $repository;
 
     /**
-     * @param IFilterEnum $filterEnum
-     * @return IDataProvider
-     */
-    public function setFilterEnum(IFilterEnum $filterEnum): IDataProvider
-    {
-        $this->filterEnum = $filterEnum;
-        $this->factory->setFilterEnum($this->filterEnum);
-
-        return $this;
-    }
-
-    /**
+     * DataProvider constructor.
+     * @param IFilterEnum $enum
      * @param IFilterRepository $repository
-     * @return IDataProvider
+     * @param FilterFactory $factory
      */
-    public function setRepository(IFilterRepository $repository): IDataProvider
+    public function __construct(IFilterEnum $enum, IFilterRepository $repository, FilterFactory $factory)
     {
+        $this->factory = $factory;
+        $this->filterEnum = $enum;
+        $this->factory->setFilterEnum($this->filterEnum);
         $this->repository = $repository;
-
-        return $this;
     }
 
     /**
@@ -75,5 +57,13 @@ class DataProvider implements IDataProvider
     public function getHasNext(): bool
     {
         // TODO: Implement getHasNext() method.
+    }
+
+    /**
+     * @param array $form
+     */
+    public function setForm(array $form): void
+    {
+        $this->factory->setForm($form);
     }
 }

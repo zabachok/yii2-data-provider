@@ -1,21 +1,21 @@
 <?php
 
-namespace app\filters;
+namespace zabachok\dataProvider;
 
 abstract class Filter implements IFilter
 {
     /**
      * @var array
      */
-//    protected $form;
+    protected $form;
 
     /**
      * @inheritdoc
      */
-//    public function setForm(array $form): IFilter
-//    {
-//        $this->form = $form;
-//
-//        return $this;
-//    }
+    public function setForm(array $form): IFilter
+    {
+        $this->form = $form;
+
+        return $this;
+    }
 }

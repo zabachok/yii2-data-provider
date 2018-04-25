@@ -1,15 +1,11 @@
 <?php
 
-namespace app\filters;
+namespace zabachok\dataProvider;
 
-use app\components\enums\KeysEnum;
-use app\components\KeyGenerator;
 use Yii;
 
 abstract class DataFilter extends Filter implements IDataFilter
 {
-    use KeyGenerator;
-
     /**
      * @param array $data
      * @return mixed
@@ -42,7 +38,7 @@ abstract class DataFilter extends Filter implements IDataFilter
         unset($form['nextPage']);
 
         return md5($this->generateKey(
-            KeysEnum::FILTER_TTL,
+            'filter-key-{form}-{class}-{path}-{userId}',
             [
                 '{form}' => serialize($form),
                 '{class}' => static::class,
@@ -59,4 +55,19 @@ abstract class DataFilter extends Filter implements IDataFilter
     {
         return Yii::$app->cache->get($this->getCacheKey());
     }
+
+    /**
+     * @param string $pattern
+     * @param array $data
+     * @return string
+     */
+    private function generateKey(string $pattern, array $data): string
+    {
+        return str_replace(
+            array_keys($data),
+            array_values($data),
+            $pattern
+        );
+    }
+
 }

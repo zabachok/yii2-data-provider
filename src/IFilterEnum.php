@@ -1,16 +1,16 @@
 <?php
 
-namespace app\filters;
+namespace zabachok\dataProvider;
 
 interface IFilterEnum
 {
     /**
-     * @return string
+     * @return string[]
      */
     public function getFiltersForRecords(): array;
 
     /**
-     * @return string
+     * @return string[]
      */
     public function getFiltersForTotal(): array;
 }

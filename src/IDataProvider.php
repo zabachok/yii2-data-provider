@@ -1,6 +1,6 @@
 <?php
 
-namespace app\filters;
+namespace zabachok\dataProvider;
 
 interface IDataProvider
 {

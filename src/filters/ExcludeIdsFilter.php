@@ -1,8 +1,8 @@
 <?php
 
-namespace app\filters\universal;
+namespace zabachok\dataProvider\filters;
 
-use app\filters\DataFilter;
+use zabachok\dataProvider\filters\DataFilter;
 use yii\db\Query;
 
 class ExcludeIdsFilter extends DataFilter

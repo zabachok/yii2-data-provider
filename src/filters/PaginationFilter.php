@@ -1,6 +1,6 @@
 <?php
 
-namespace zabachok\burivuh\src\filters;
+namespace zabachok\dataProvider;
 
 use yii\db\Query;
 use zabachok\dataProvider\Filter;

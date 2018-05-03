@@ -22,4 +22,9 @@ interface IFilter
      * @return bool
      */
     public function isValid(): bool;
+
+    /**
+     * @return string[]
+     */
+    public function getTables(): array;
 }

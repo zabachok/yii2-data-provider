@@ -10,12 +10,20 @@ abstract class Filter implements IFilter
     protected $form;
 
     /**
-     * @inheritdoc
+     *
      */
     public function setForm(array $form): IFilter
     {
         $this->form = $form;
 
         return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getTables(): array
+    {
+        return [];
     }
 }

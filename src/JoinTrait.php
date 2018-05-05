@@ -6,17 +6,24 @@ use yii\db\Query;
 
 trait JoinTrait
 {
-    private $joinedTables;
+    private $joinedTables = [];
 
     /**
      * @param Query $query
      * @param array $filters
-     * @param array $allowedTables
+     * @param array $joinTables
      */
-    public function setFilters(Query $query, array $filters, array $allowedTables)
+    public function setFilters(Query $query, array $filters, array $joinTables)
     {
+        $this->joinedTables = [];
+
         foreach ($filters as $filter) {
-            $this->joinTables($query, $filter->getTables(), $allowedTables);
+            try {
+
+                $this->joinTables($query, $filter->getTables(), $joinTables);
+            } catch (DataProviderException $exception) {
+                throw new DataProviderException($exception->getMessage() . ' in ' . get_class($filter) . ' filter');
+            }
             $filter->setFilter($query);
         }
     }
@@ -24,20 +31,20 @@ trait JoinTrait
     /**
      * @param Query $query
      * @param string[] $tables
-     * @param array $allowedTables
+     * @param array $joinTables
      * @throws DataProviderException
      */
-    private function joinTables(Query $query, array $tables, array $allowedTables)
+    private function joinTables(Query $query, array $tables, array $joinTables)
     {
         if (empty($tables)) {
             return;
         }
 
         foreach ($tables as $table) {
-            if (!isset($allowedTables[$table])) {
+            if (!isset($joinTables[$table])) {
                 throw new DataProviderException('`' . $table . '` is not allowed table');
             }
-            $this->join($query, $table, $allowedTables[$table]);
+            $this->join($query, $table, $joinTables[$table]);
         }
     }
 
@@ -53,6 +60,6 @@ trait JoinTrait
         }
 
         $this->joinedTables[] = $table;
-        $query->join($options['type'], [$options['type'] => $table], $options['on'], $options['params'] ?? null);
+        $query->join($options['type'], [$options['alias'] => $table], $options['on'], $options['params'] ?? null);
     }
 }

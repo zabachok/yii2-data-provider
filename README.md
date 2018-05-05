@@ -25,7 +25,6 @@ to the require section of your `composer.json` file.
 ### Repository
 
 ```php
-
 namespace app\repositories\statistic;
 
 use app\models\statistic\StatisticExportRequest;
@@ -73,7 +72,6 @@ class StatisticRepository implements IStatisticRepository, IFilterRepository
 ### Enum
 
 ```php
-
 namespace app\enums\statistic;
 
 use app\filters\statistic\CreatedAtOrderFilter;
@@ -113,7 +111,6 @@ class FiltersEnum implements IFilterEnum
 ### Service
 
 ```php
-
 namespace app\services\statistic;
 
 use app\builders\IBuilder;

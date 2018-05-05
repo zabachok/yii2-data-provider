@@ -25,7 +25,7 @@ abstract class DataFilter extends Filter implements IDataFilter
         return Yii::$app->cache->set(
             $this->getCacheKey(),
             $this->formatData($data),
-            Yii::$app->params['filter']['ttl']
+            3600
         );
     }
 

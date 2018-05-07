@@ -25,7 +25,7 @@ abstract class DataFilter extends Filter implements IDataFilter
         return Yii::$app->cache->set(
             $this->getCacheKey(),
             $this->formatData($data),
-            3600
+            $this->getCacheTtl()
         );
     }
 
@@ -34,8 +34,7 @@ abstract class DataFilter extends Filter implements IDataFilter
      */
     protected function getCacheKey(): string
     {
-        $form = $this->form;
-        unset($form['nextPage']);
+        $form = $this->filterForm($this->form);
 
         return md5($this->generateKey(
             'filter-key-{form}-{class}-{path}-{userId}',
@@ -70,4 +69,22 @@ abstract class DataFilter extends Filter implements IDataFilter
         );
     }
 
+    /**
+     * @return int
+     */
+    protected function getCacheTtl(): int
+    {
+        return 3600;
+    }
+
+    /**
+     * @param array $form
+     * @return array
+     */
+    protected function filterForm(array $form): array
+    {
+        unset($form['nextPage']);
+
+        return $form;
+    }
 }

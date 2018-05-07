@@ -106,8 +106,6 @@ class FilterFactory implements IFilterFactory
     private function getFilter(string $filterName): IFilter
     {
         /** @var IFilter $filter */
-        $filter = Yii::$container->get($filterName);
-
-        return $filter->setForm($this->form);
+        return Yii::$container->get($filterName, [$this->form]);
     }
 }

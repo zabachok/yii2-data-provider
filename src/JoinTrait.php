@@ -6,14 +6,18 @@ use yii\db\Query;
 
 trait JoinTrait
 {
+    /**
+     * @var string[]
+     */
     private $joinedTables = [];
 
     /**
      * @param Query $query
      * @param array $filters
      * @param array $joinTables
+     * @return Query
      */
-    public function setFilters(Query $query, array $filters, array $joinTables)
+    public function setFilters(Query $query, array $filters, array $joinTables): Query
     {
         $this->joinedTables = [];
 
@@ -26,6 +30,8 @@ trait JoinTrait
             }
             $filter->setFilter($query);
         }
+
+        return $query;
     }
 
     /**

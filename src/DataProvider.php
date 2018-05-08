@@ -86,7 +86,10 @@ class DataProvider implements IDataProvider
         $this->factory->setForm($form);
     }
 
-    private function getRecordsInternal()
+    /**
+     * @return array
+     */
+    private function getRecordsInternal(): array
     {
         if(empty($this->records)){
             $this->records = $this->repository->getRecordsByFilters(
@@ -97,12 +100,18 @@ class DataProvider implements IDataProvider
         return $this->records;
     }
 
-    protected function setDataToFilters(array $records)
+    /**
+     * @param array $records
+     * @return DataProvider
+     */
+    protected function setDataToFilters(array $records): DataProvider
     {
         $dataFilters = $this->factory->getDataFilters();
 
         foreach ($dataFilters as $dataFilter) {
             $dataFilter->saveData($records);
         }
+
+        return $this;
     }
 }

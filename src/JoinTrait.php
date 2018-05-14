@@ -23,7 +23,6 @@ trait JoinTrait
 
         foreach ($filters as $filter) {
             try {
-
                 $this->joinTables($query, $filter->getTables(), $joinTables);
             } catch (DataProviderException $exception) {
                 throw new DataProviderException($exception->getMessage() . ' in ' . get_class($filter) . ' filter');
@@ -45,8 +44,12 @@ trait JoinTrait
         if (empty($tables)) {
             return;
         }
+        $primaryTable = $query->modelClass::tableName();
 
         foreach ($tables as $table) {
+            if ($table == $primaryTable) {
+                continue;
+            }
             if (!isset($joinTables[$table])) {
                 throw new DataProviderException('`' . $table . '` is not allowed table');
             }

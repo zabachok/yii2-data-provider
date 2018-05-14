@@ -16,6 +16,7 @@ abstract class Filter implements IFilter
     public function __construct(array $form)
     {
         $this->setForm($form);
+        $this->init();
     }
 
     /**
@@ -29,10 +30,10 @@ abstract class Filter implements IFilter
     }
 
     /**
-     * @inheritdoc
+     * @return void
      */
-    public function getTables(): array
+    protected function init()
     {
-        return [];
+
     }
 }

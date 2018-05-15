@@ -13,6 +13,18 @@ abstract class DataFilter extends Filter implements IDataFilter
     abstract protected function formatData(array $data);
 
     /**
+     * DataFilter constructor.
+     * @param array $form
+     */
+    public function __construct(array $form)
+    {
+        parent::__construct($form);
+        if (empty($this->form['nextPage'])) {
+            Yii::$app->cache->delete($this->getCacheKey());
+        }
+    }
+
+    /**
      * @param array $data
      * @return bool
      */
